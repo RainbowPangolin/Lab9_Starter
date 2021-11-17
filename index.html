@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "92151c357fd0432690fa575c81f85e86"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -69,39 +77,90 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button  onclick='console.log("Hello!")'>Console Log</button>
+      <button onclick='console.error("Error!!!!!")'>Console Error</button>
+      <button onclick='console.count("count")'>Console Count</button>
+      <button  onclick='console.warn("Warning pls")'>Console Warn</button>
+      <button onclick='const x = 5;
+        const y = 3;
+        const reason = "x is expected to be less than y";
+        console.assert(x < y, {x, y, reason});'>Console Assert</button>
+      <button onclick='console.clear()'>Console Clear</button>
+      <button onclick='console.dir(document.head)'>Console Dir</button>
+      <button onclick='console.dirxml(document)'>Console dirxml</button>
+      <button onclick=' console.group("label");'>Console Group Start</button>
+      <button onclick='console.groupEnd("label");'>Console Group End</button>
+      <button onclick="console.table([
+      {
+        first: 'René',
+        last: 'Magritte',
+      },
+      {
+        first: 'Chaim',
+        last: 'Soutine',
+        birthday: '18930113',
+      },
+      {
+        first: 'Henri',
+        last: 'Matisse',
+      }
+    ]);">Console Table</button>
+      <button onclick='console.time(["label2"])'>Start Timer</button>
+      <button onclick='console.timeEnd(["label2"])'>End Timer</button>
+      <button onclick='const first = () => { second(); };
+        const second = () => { third(); };
+        const third = () => { fourth(); };
+        const fourth = () => { console.trace(); };
+        first();'>Console Trace</button>
+      <button onclick='asdads'>Trigger a Global Error</button>
+
+      <button id="badButton" onclick='console.log("Hello!")'>Wow</button>
+
     </section>
   </main>
 
-  <script>
-    let form = document.querySelector('form');
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
-    });
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+
+  <script>
+    class MathError extends Error {
+      constructor(message) {
+        super(message); 
+        this.name = "Math Error"; 
+      }
+    }
+
+
+    let form = document.querySelector('form');
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        let output = document.querySelector('output');
+        let firstNum = document.querySelector('#first-num').value;
+        let secondNum = document.querySelector('#second-num').value;
+        let operator = document.querySelector('#operator').value;
+        try {
+          if(typeof firstNum !== 'number' || typeof secondNum !== 'number' ){
+            throw new MathError("these are not numbers, silly!");
+          }
+          output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+        } catch (err) {
+          if(err instanceof MathError){
+            alert(err);
+            throw err;
+          }
+          else{
+            alert("undefined error");
+          }
+        } finally {
+          console.log("nad");
+        }
+      });
+
+      let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+
+
   </script>
 </body>
 
